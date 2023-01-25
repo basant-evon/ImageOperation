@@ -21,6 +21,7 @@ class ViewController: UIViewController{
     @IBOutlet weak var btnJpg: UIButton!
     var imageName = "jpgImage"
     var indx = 0
+    var indxStr = ""
  var imageIndx = 1
     override func viewDidLoad() {
         
@@ -83,14 +84,31 @@ class ViewController: UIViewController{
                 do {
                     //Convert
                     let tempDirectoryURL = URL(fileURLWithPath:  NSTemporaryDirectory(), isDirectory: true)
-                    var imNma = imageName  + ".JPG"
+                      imageIndx += 1
+                     indxStr = String(imageIndx)
+                    let imNma = imageName + indxStr + ".JPG"
+                   
                    // let newFileName = "\(imNma.append(".JPG"))"
                     let targetURL = tempDirectoryURL.appendingPathComponent(imNma)
+                    
+                    
+                    do {
+                               let imageData = try Data(contentsOf: targetURL)
+                              self.imgConverted.image = UIImage(data: imageData)
+                              // return UIImage(data: imageData)
+                           } catch {
+                               print("Not able to load image")
+                           }
+//                    if NSFileManager.defaultManager.fileExistsAtPath(targetURL) {
+//                        let url = NSURL(string: targetURL)
+//                        let data = NSData(contentsOfURL: url!)
+//                        imageView.image = UIImage(data: data!)
+//                    }
                     print("targetURL=\(targetURL)")
                     try jpegImage.write(to: targetURL, options: [])
-                    DispatchQueue.main.async {
-                        self.imgConverted.image = image
-                    }
+                  //  DispatchQueue.main.async {
+                        
+                   // }
                 }catch {
                     print (error.localizedDescription)
                     print("FAILED")
